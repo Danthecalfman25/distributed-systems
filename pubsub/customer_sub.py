@@ -1,4 +1,5 @@
 import pika
+import time
 import json
 import random
 
@@ -13,8 +14,13 @@ channel.queue_bind(exchange = 'delivery', queue = 'customer_updates', routing_ke
 print('Waiting for logs.')
 
 def callback(ch, method, properties, body):
-    print(f"{body}")
+    message = body.decode('utf-8')
+    print(f"{message}")
 
 channel.basic_consume(queue='customer_updates', on_message_callback=callback, auto_ack=True)
 
 channel.start_consuming()
+
+time.sleep(40)
+
+connection.close()
